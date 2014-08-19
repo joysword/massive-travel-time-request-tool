@@ -1,0 +1,20 @@
+body { background: #fbfbfb;  background: url(../imgs/bgpaths.png);}
+h2, h3 { font-family: Helvetica, Arial, sans-serif; font-size: 1.5em; font-weight: normal; margin:25px 0 5px 0;}
+h2 { background: white url("imgs/headcube2.png") no-repeat 10px 10px; padding: 11px 0 10px 50px; }
+h3 { font-size: 1.2em; padding: 0; margin: 0;}
+textarea { height: 238px; width: 455px; }
+#container { width: 700px; margin: auto; font-family: Helvetica, Arial, sans-serif }
+#header { background: white url("imgs/headcube.png") no-repeat 10px 10px; padding: 21px 0 20px 70px; }
+#map_canvas { width: 200px; height: 280px; float: right; border: 5px solid #ccc;}
+#warn { background-color: #fee; display: none;}
+#waittime { width: 5em; }
+#jdist, #warn_error_msg { width: 99%; }
+#prog_bar { border: 1px solid lightblue; }
+#prog_bar > div { background-color: lightblue; width: 0%; }
+.tb, h2 { box-shadow: 0px 0px 6px #bbb; }
+.tb { padding: 10px; margin: 5px 0; background-color: white; line-height: 1.4em; overflow: auto; }
+.fwb { float: left; width: 50%;}
+.nodisp { display: none; }
+@media screen and (max-width: 700px) {
+	#container {width: 95%}
+}

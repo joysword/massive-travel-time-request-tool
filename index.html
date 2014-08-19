@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<!--
+	Copyright 2014 Shi Yin
+	This project is derived from a great work by
+	Cyrille Medard de Chardon and Geoffrey Caruso.
+	Their project is at: http://geow.uni.lu/apps/fbr/index.html
+	and is licensed under the MIT license.
+	This derived project is also licensed under the MIT license.
+	See Licence.txt
+-->
+<html lang="en">
+<head>
+	<title>Massive Traveling Time Request Tool with Bing Maps API</title>
+
+	<meta charset="utf-8"/>
+	<meta author="Shi Yin">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+
+	<meta name="og:url" content="http://joysword.com/massreq/">
+	<meta name="og:title" content= "Massive Traveling Time Retriever">
+	<meta name="og:description" content="">
+	<meta name="og:image" content="">
+
+	<link rel="shortcut icon" href="favicon.ico" type="image/icon">
+	<meta name="viewport" content="initial-scale=1.0" />
+
+	<!-- JAVASCRIPT -->
+	<!--<script src="http://maps.google.com/maps/api/js?key=[your-key]&sensor=false"></script>-->
+    <!--<script src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+	<script src="js/script.js"></script>
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0-rc-1/pure-min.css">
+    <link rel="stylesheet" href="css/style.css" />
+
+</head>
+<body onload="MassReq.initialize();">
+    <div id="container">
+        <h2 id='header'>Massive Traveling Time Request Tool with Bing Maps API</h2>
+        <div id='optwin' class='tb'>
+            <div>
+                <form class="pure-form">
+                    <fieldset>
+                        <legend>Options</legend>
+
+                        <label for="origtype" class="pure-checkbox">
+                            <input type="checkbox" id="origtype" checked>
+                            Origin type is lat/long
+                        </label>
+
+                        <label for="desttype"  class="pure-checkbox">
+                            <input type="checkbox" id="desttype" checked>
+                            Destination type is lat/long
+                        </label>
+
+                        <legend>Avoid</legend>
+
+                        <div class="pure-g">
+                            <div class="pure-u-1-3">
+                                <label class="pure-checkbox">
+                                    <input type="checkbox" id="hwavoid">
+                                    Highways
+                                </label>
+                            </div>
+
+                            <div class="pure-u-1-3">
+                                <label for="tavoid" class="pure-checkbox">
+                                    <input type="checkbox" id="tavoid">
+                                    Tollways
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Travel types</legend>
+                        <div class="pure-g">
+                            <div class="pure-u-1-3">
+                                <label for="driving" class="pure-checkbox">
+                                    <input type="radio" name="type" id="driving" value='d' checked>
+                                    DRIVING
+                                </label>
+                            </div>               
+
+                            <div class="pure-u-1-3">
+                                <label for="transit" class="pure-checkbox">
+                                    <input type="radio" name="type" id="transit" value='t'>
+                                    TRANSIT
+                                </label>
+                            </div>
+
+                            <div class="pure-u-1-3">
+                                <label for="walking" class="pure-checkbox">
+                                    <input type="radio" name="type" id="walking" value='w'>
+                                    WALKING
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Pause time</legend>
+                        <label for="waittime">
+                            <input type="number" id="waittime" value="400"> + 600 pause time between queries (ms)
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+
+                    <legend>Output</legend>
+
+                    <div class="pure-g">
+                        <div class="pure-u-1-3">
+                            Unit systems used:
+                        </div>
+
+                        <div class="pure-u-1-5">
+                            <label for="metric">
+                                <input id="metric" type="radio" name='unitsys' value='m'>
+                                kilometers
+                            </label>
+                        </div>
+
+                        <div class="pure-u-1-3">
+                            <label for="imperial">
+                                <input id="imperial" type="radio" name='unitsys' value='i' checked>
+                                miles
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pure-g">
+                        <div class="pure-u-1-3">
+                            Separate output values with:
+                        </div>
+
+                        <div class="pure-u-1-5">
+                            <label for="tab">
+                                <input id="tab" type="radio" name='sepval' value='t' checked>
+                                Tab
+                            </label>
+                        </div>
+
+                        <div class="pure-u-1-3">
+                            <label for="comma">
+                                <input id="comma" type="radio" name='sepval' value='c'>
+                                Comma
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="pure-g">
+                        <div class="pure-u-1-3">
+                            Output format:
+                        </div>
+
+                        <div class="pure-u-1-5">
+                            <label for="gis">
+                                <input id="gis" type="radio" name='outputformat' value='g' checked>
+                                GIS-friendly
+                            </label>
+                        </div>
+
+                        <div class="pure-u-1-3">
+                            <label for="eye">
+                                <input id="eye" type="radio" name='outputformat' value='e'>
+                                Human-friendly
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class='tb'>
+            <div id="map_canvas"></div>Enter journey list in format:
+            <strong>id;origin;destination</strong>
+            <form class="pure-form">
+                <textarea id="journeylist" cols='80' rows='5' onblur="MassReq.countRecords(false);" onfocus="MassReq.countRecords(true);">1;41.977,-87.901;41.868,-87.647</textarea>
+                <!--<input type='submit' onclick='MassReq.calcRoute();'>-->
+                <button type="button" class="pure-button pure-button-primary" onclick="MassReq.calcRoute()">submit</button>
+                <!--<input id='b_stop' class='nodisp' type='button' value='stop' onclick='MassReq.stopCalc();'>-->
+                <button id='b_stop' class='nodisp pure-button' type='button' value='stop' onclick='MassReq.stopCalc();'>stop</button>
+            </form>
+            <br>
+            <span id='rec_count'></span>
+			<div id="prog_box" class='nodisp'>
+				<div id="prog_text">Process 0% completed</div>
+				<div id="prog_bar">
+					<div id="prog_bar_size">&nbsp;</div>
+				</div>
+			</div>
+        </div>
+        <div id='warn' class='tb nodisp'></div>
+        <h2>Results overview</h2>
+        <div id='cmpper' class='tb  nodisp'></div>
+        <div class='tb'>Results are located on your server in the output folder as date_time stamped
+            files:<br>
+            <strong>date_time_maindata.txt</strong> and <strong>date_time_pathdata.txt</strong></div>
+        <h2 class='error_sec nodisp'>Errors</h2>
+        <div class='tb error_sec nodisp'>Skipped records due to unreachable location, error, incorrect input
+            <textarea id="jdist" rows='10'></textarea><br>
+			Error Explanations<br>
+            <textarea id="warn_error_msg" rows='5'></textarea>
+        </div>
+        <div class='tb'>Copyright &copy; 2014 Shi Yin<br>
+            Derived from <a href="http://geow.uni.lu/apps/fbr/index.html">a project</a> by Cyrille M&eacute;dard de Chardon and Geoffrey Caruso
+            <br>Licensed under the MIT license - see
+            <a href='Licence.txt'>Licence.txt</a>
+        </div>
+    </div>
+    <!-- end of container -->
+</body>
+
+</html>
