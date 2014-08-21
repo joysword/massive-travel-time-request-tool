@@ -47,7 +47,7 @@ MassReq.initialize = function () {
 	
 	//setup error handling
 	if (window.location.protocol === 'file:') {
-		$('#warn').html("ERROR: You MUST place FBR on a server and access it through http protocol.<br>Your URL should look something like <em><strong>http://your.host.name/fbr/index.html</strong></em><br>While MassReq may display the paths, <strong>your results will not be saved</strong>.");
+		$('#warn').html("ERROR: You MUST place MassReq on a server and access it through http protocol.<br>Your URL should look something like <em><strong>http://your.host.name/massreq/index.html</strong></em><br>While MassReq may display the paths, <strong>your results will not be saved</strong>.");
 		$("#warn").show('fast');
 	}
 	console.log("finish initializing");
