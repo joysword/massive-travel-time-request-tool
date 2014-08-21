@@ -14,15 +14,17 @@ A simple origin-destination address or lat/long pair input will return:
 * the lat/long of the origin,
 * the lat/long of the destination,
 * travel time in `seconds`, and
-* travel distance in `meters`
+* travel distance in use `kilometers` or `miles`
 
 ## Prerequisite
 * A server that you have access to. It could be your local machine, but you have to set up a `localhost` to use this tool.
 * PHP is required to run this tool.
+* You need to have a Bing Maps Key to make request to Microsoft's server. You can get one [here](https://www.bingmapsportal.com/).
 
 ## Installation
 * Download the repo and upload to your server.
 * Change the permission of `output` directory to 777 (writable for all).
+* Insert your Bing Maps Key to 
 
 ## Usage
 ### Inserting your data
@@ -49,10 +51,10 @@ Unlike the examples above it is suggested that all the input origin-destinations
 Allows you to avoid `highways` and/or `tollways`.
 
 #### Travel types
-You can select the type of travel you would like the distance/directions for. Available options are `DRIVING`, `TRANSIT` and `WALKING`. Note that transit directions are not widespread outside of North America. Using these travel types may return many or total retrieval errors due to no results being returned by Google Maps.
+You can select the type of travel you would like the distance/directions for. Available options are `DRIVING`, `TRANSIT` and `WALKING`. Note that transit directions are not widespread outside of North America. Using these travel types may return many or total retrieval errors due to no results being returned by the Bing Maps.
 
 #### Pause time
-This is the interval between direction requests to the Google Maps API. If you are requesting more than 2,500 requests you should wait 34 seconds per request so that you do not go over the maximum daily limit. Entering a pause value of 34000 milliseconds would allow you to submit 5,000 records over two days. Additionally having too short a pause duration can increase your chance of rejection from the Google Maps API server. There is a built-in delay of 600 milliseconds minumum. Combined with the default 400 millisecond option this creates a 1 second delay between request.
+This is the interval between direction requests to the Bing Maps API. Generally Bing Maps API has a rather high query quota for educational uses. If you are not sure whether your queries will exceed the allowed amount, check the Bing Maps API for reference. Additionally having too short a pause duration can increase your chance of rejection from the Bing Maps API server. There is a built-in delay of 600 milliseconds minimum. Combined with the default 400 millisecond option this creates a 1 second delay between requests.
 
 #### Unit system used
 You can select to use `kilometers` or `miles` for the output distance.
